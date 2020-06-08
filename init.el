@@ -9,7 +9,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (magit)))
+ '(org-agenda-files (quote ("~/org/notes.org")))
+ '(package-selected-packages (quote (amx ido-completing-read+ magit)))
  '(show-paren-mode t)
  '(tool-bar-mode nil))
 
@@ -32,6 +33,12 @@
 (global-set-key "\C-cb" 'org-switchb)
 
 (setq org-catch-invisible-edits 'smart)
+
+(setq ido-enable-flex-matching t)
+(ido-mode 1)
+(ido-everywhere 1)
+(ido-ubiquitous-mode 1)
+(amx-mode 1)
 
 (defun kill-region-or-backward-kill-word (&optional arg region)
   "'kill-region' if the region is active, otherwise 'backward-kill-word'"
@@ -161,3 +168,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(shell)
