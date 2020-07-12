@@ -1,3 +1,6 @@
+;; Emacs Initial Configuration
+;; ===========================
+
 ;; disable the toolbar
 (tool-bar-mode -1)
 
@@ -8,6 +11,8 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("org" . "https://orgmode.org/elpa/") t)
 
 (package-initialize)
 
@@ -22,6 +27,9 @@
 
 ;; load org and the full config file
 (require 'org)
+(use-package org
+  :ensure org-plus-contrib)
+
 (org-babel-load-file "~/.emacs.d/config.org")
 
 (custom-set-variables
@@ -30,7 +38,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files (quote ("~/org/notes.org")))
- '(package-selected-packages (quote (org-mime amx ido-completing-read+ magit))))
+ '(package-selected-packages
+   (quote
+    (org-plus-contrib org-mime amx ido-completing-read+ magit))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
