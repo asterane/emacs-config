@@ -5,7 +5,6 @@ Set my name and email address
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Matthew Rothlisberger")
-(setq user-mail-address "example@gmail.com")
 #+END_SRC
 
 * Basic Improvements
@@ -79,6 +78,79 @@ fill instead of only filling
 (use-package unfill
   :ensure t
   :bind ("M-q" . unfill-toggle))
+#+END_SRC
+
+** Winner Mode
+Allow changes in window configuration to be undone or redone with the
+key combinations C-c left and C-c right.
+
+#+BEGIN_SRC emacs-lisp
+(winner-mode 1)
+#+END_SRC
+
+** Browse Kill Ring
+Enable looking through the kill ring as necessary to get previously
+killed text without excessive keystrokes
+
+#+BEGIN_SRC emacs-lisp
+(use-package browse-kill-ring)
+#+END_SRC
+
+* Appearance
+** Dashboard
+Use a different startup screen that shows more useful information and
+may be extended
+
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+#+END_SRC
+
+** All the Icons
+Make all-the-icons available for themes and other packages to use
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons)
+#+END_SRC
+
+** Doom Theme
+Use one of the doom-themes to make Emacs look extra nice (unsure
+whether I want to stick to this; a simple color theme might be better)
+
+#+BEGIN_SRC emacs-lisp
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-bold nil)
+  (setq doom-acario-dark-brighter-comments nil)
+  (setq doom-acario-dark-comment-bg t)
+
+  (load-theme 'doom-acario-dark t)
+
+  (doom-themes-org-config)
+  (doom-themes-visual-bell-config))
+
+#+END_SRC
+
+** Mode Line
+*** Doom Mode Line
+Use an already configured mode line designed for the doom theme
+
+#+BEGIN_SRC emacs-lisp
+(use-package doom-modeline
+  :init (doom-modeline-mode 1))
+#+END_SRC
+
+*** Additional Info
+Show time and battery level in the mode line (or not)
+
+#+BEGIN_SRC emacs-lisp
+(setq display-time-format nil)
+(setq display-time-day-and-date t)
+(setq display-time-24hr-format t)
+(display-time-mode 1)
+
+;(display-battery-mode 1)
 #+END_SRC
 
 * Keybindings
@@ -274,13 +346,17 @@ Log time of completion for finished to do items
 #+END_SRC
 
 * Magit
-Make sure Magit is installed and set important keybindings
+Make sure Magit is installed and set important keybindings, then
+install Magit Forge to integrate with GitHub and GitLab.
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)
          ("C-x M-g" . magit-dispatch)))
+
+(use-package forge
+  :after magit)
 #+END_SRC
 
 * Completions
@@ -308,6 +384,18 @@ Ensure installation and enable
   :ensure t
   :config
   (amx-mode 1))
+#+END_SRC
+
+* Projectile
+Use projectile mode to keep track of projects and provide some useful
+functions for their management (I'm not sure whether I actually want
+to use this)
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package projectile
+  ;; :config
+  ;; (projectile-mode +1)
+  ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+END_SRC
 
 * Email
@@ -455,8 +543,8 @@ Full email client in emacs; must be installed on system level
 #+END_SRC
 
 * Miscellaneous
+Allow me to run a typing test inside Emacs whenever I feel like it
+
 #+BEGIN_SRC emacs-lisp
-
-;(require 'org-mime)
-
+(use-package speed-type)
 #+END_SRC
