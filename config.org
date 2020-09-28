@@ -125,7 +125,26 @@ key combinations C-c left and C-c right.
 #+BEGIN_SRC emacs-lisp
 (winner-mode 1)
 #+END_SRC
+
+** Browse Kill Ring
+Enable looking through the kill ring as necessary to get previously
+killed text without excessive keystrokes
+
+#+BEGIN_SRC emacs-lisp
+(use-package browse-kill-ring)
+#+END_SRC
+
 * Appearance
+** Dashboard
+Use a different startup screen that shows more useful information and
+may be extended
+
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+#+END_SRC
+
 ** All the Icons
 Make all-the-icons available for themes and other packages to use
 
@@ -572,13 +591,17 @@ Use icons for files in dired
 #+END_SRC
 
 * Magit
-Make sure Magit is installed and set important keybindings
+Make sure Magit is installed and set important keybindings, then
+install Magit Forge to integrate with GitHub and GitLab.
 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
   :bind (("C-x g" . magit-status)
          ("C-x M-g" . magit-dispatch)))
+
+(use-package forge
+  :after magit)
 #+END_SRC
 
 * Flycheck
@@ -608,6 +631,18 @@ Install flycheck-rust for additional Rust checking support
 #+BEGIN_SRC emacs-lisp
 (use-package flycheck-rust
   :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+#+END_SRC
+
+* Projectile
+Use projectile mode to keep track of projects and provide some useful
+functions for their management (I'm not sure whether I actually want
+to use this)
+
+#+BEGIN_SRC emacs-lisp
+;; (use-package projectile
+  ;; :config
+  ;; (projectile-mode +1)
+  ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+END_SRC
 
 * Email
@@ -755,6 +790,8 @@ Full email client in emacs; must be installed on system level
 #+END_SRC
 
 * Miscellaneous
-#+BEGIN_SRC emacs-lisp
+Allow me to run a typing test inside Emacs whenever I feel like it
 
+#+BEGIN_SRC emacs-lisp
+(use-package speed-type)
 #+END_SRC
