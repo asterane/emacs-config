@@ -1,4 +1,5 @@
 #+TITLE: Emacs Main Configuration
+#+STARTUP: overview
 
 * User Information
 Set my name and email address
@@ -93,7 +94,8 @@ Enable looking through the kill ring as necessary to get previously
 killed text without excessive keystrokes
 
 #+BEGIN_SRC emacs-lisp
-(use-package browse-kill-ring)
+(use-package browse-kill-ring
+  :bind ("C-c y" . browse-kill-ring))
 #+END_SRC
 
 * Appearance
@@ -195,7 +197,35 @@ Set my custom bindings of standard Emacs functions to the unbound C-c
 combinations
 
 #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c d") 'delete-indentation)
 (global-set-key (kbd "C-c e") 'enlarge-window)
+#+END_SRC
+
+** Drag Stuff
+Enable dragging lines and regions around in a file, just like bullet
+points in Org mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+  :config
+  (drag-stuff-global-mode 1)
+  (drag-stuff-define-keys)
+  (add-to-list 'drag-stuff-except-modes 'org-mode)
+  )
+#+END_SRC
+
+** Smart Hungry Delete
+Allow me to delete lots of whitespace at once, avoiding repeated
+key presses
+
+#+BEGIN_SRC emacs-lisp
+(use-package smart-hungry-delete
+  :ensure t
+  :bind (("<DEL>" . smart-hungry-delete-backward-char)
+	 ("C-d" . smart-hungry-delete-forward-char))
+  :defer nil ;; dont defer so we can add our functions to hooks 
+  :config (smart-hungry-delete-add-default-hooks)
+  )
 #+END_SRC
 
 * Major Mode Changes
@@ -308,9 +338,107 @@ function at point
   (kbd "M-.") 'find-function-at-point)
 #+END_SRC
 
-* Package Management
-** Automatic Updates
-// TODO
+** SQL Mode
+Use sqlup to automatically change SQL keywords to uppercase while
+typing, and blacklist any necessary words
+
+#+BEGIN_SRC emacs-lisp
+(use-package sqlup-mode
+  :config
+  (add-hook 'sql-mode-hook 'sqlup-mode)
+  (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+  (add-to-list 'sqlup-blacklist "name")
+  (add-to-list 'sqlup-blacklist "schema"))
+#+END_SRC
+
+** YAML Mode
+Add a mode for YAML configuration files, which are used by Jekyll
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
+#+END_SRC
+
+* Completions
+** Ido
+System for smart completion of file and buffer names
+Make sure full ido functionality is installed, configure it, and turn
+it on
+
+#+BEGIN_SRC emacs-lisp
+(use-package ido-completing-read+
+  :ensure t
+  :config
+  (setq ido-enable-flex-matching t)
+  (setq ido-case-fold t)
+  (ido-mode 1)
+  (ido-everywhere 1)
+  (ido-ubiquitous-mode 1))
+#+END_SRC
+
+** Amx
+Much improved interface for M-x
+Ensure installation and enable
+
+#+BEGIN_SRC emacs-lisp
+(use-package amx
+  :ensure t
+  :config
+  (amx-mode 1))
+#+END_SRC
+
+** Company
+Provides access to many in-buffer completions
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :demand
+  :bind (:map company-active-map
+         ("TAB" . company-complete-selection)
+         ("RET" . nil))
+  :init
+  (setq company-idle-delay 0.3)
+  (setq company-minimum-prefix-length 1)
+  (setq company-selection-wrap-around t)
+  :config
+  (global-company-mode t))
+#+END_SRC
+
+* Navigation
+** Ace Window
+Set up quicker window switching than normal, for when more than two
+are present; also set the face of the selection characters to be much
+more visible
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :bind ("M-o" . ace-window)
+  :custom-face
+  (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :foreground "yellow"
+                                      :weight semi-bold :slant normal :underline nil :height 4.0))))
+  :config
+  (setq aw-keys '(?a ?h ?t ?s ?p ?k ?g ?r ?w))
+  (setq aw-background t))
+#+END_SRC
+
+** Deadgrep
+Fast text search using the ripgrep utility
+
+#+BEGIN_SRC emacs-lisp
+(use-package deadgrep
+  :bind ("<f5>" . deadgrep))
+#+END_SRC
+
+** Hyperbole
+Powerful information management system that connects documents
+together automatically using hypertext.
+
+#+BEGIN_SRC emacs-lisp
+(use-package hyperbole)
+#+END_SRC
+
 * Org Mode
 ** Global Keybindings
 Set recommended global keybindings for important org functions
