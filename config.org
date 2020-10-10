@@ -1,4 +1,5 @@
 #+TITLE: Emacs Main Configuration
+#+STARTUP: overview
 
 * User Information
 Set my name and email address
@@ -131,7 +132,8 @@ Enable looking through the kill ring as necessary to get previously
 killed text without excessive keystrokes
 
 #+BEGIN_SRC emacs-lisp
-(use-package browse-kill-ring)
+(use-package browse-kill-ring
+  :bind ("C-c y" . browse-kill-ring))
 #+END_SRC
 
 * Appearance
@@ -233,7 +235,35 @@ Set my custom bindings of standard Emacs functions to the unbound C-c
 combinations
 
 #+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c d") 'delete-indentation)
 (global-set-key (kbd "C-c e") 'enlarge-window)
+#+END_SRC
+
+** Drag Stuff
+Enable dragging lines and regions around in a file, just like bullet
+points in Org mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package drag-stuff
+  :config
+  (drag-stuff-global-mode 1)
+  (drag-stuff-define-keys)
+  (add-to-list 'drag-stuff-except-modes 'org-mode)
+  )
+#+END_SRC
+
+** Smart Hungry Delete
+Allow me to delete lots of whitespace at once, avoiding repeated
+key presses
+
+#+BEGIN_SRC emacs-lisp
+(use-package smart-hungry-delete
+  :ensure t
+  :bind (("<DEL>" . smart-hungry-delete-backward-char)
+	 ("C-d" . smart-hungry-delete-forward-char))
+  :defer nil ;; dont defer so we can add our functions to hooks 
+  :config (smart-hungry-delete-add-default-hooks)
+  )
 #+END_SRC
 
 * Major Mode Changes
@@ -419,6 +449,7 @@ it on
   :ensure t
   :config
   (setq ido-enable-flex-matching t)
+  (setq ido-case-fold t)
   (ido-mode 1)
   (ido-everywhere 1)
   (ido-ubiquitous-mode 1))
@@ -475,6 +506,14 @@ Fast text search using the ripgrep utility
 #+BEGIN_SRC emacs-lisp
 (use-package deadgrep
   :bind ("<f5>" . deadgrep))
+#+END_SRC
+
+** Hyperbole
+Powerful information management system that connects documents
+together automatically using hypertext.
+
+#+BEGIN_SRC emacs-lisp
+(use-package hyperbole)
 #+END_SRC
 
 * Org Mode
