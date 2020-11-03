@@ -101,12 +101,12 @@ killed text without excessive keystrokes
 * Appearance
 ** Dashboard
 Use a different startup screen that shows more useful information and
-may be extended
+may be extended (stopped working)
 
 #+BEGIN_SRC emacs-lisp
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook))
+;; (use-package dashboard
+;;   :config
+;;   (dashboard-setup-startup-hook))
 #+END_SRC
 
 ** All the Icons
@@ -193,12 +193,14 @@ but kills one word backwards otherwise
 #+END_SRC
 
 ** C-c <char> Bindings
-Set my custom bindings of standard Emacs functions to the unbound C-c
+Set my custom bindings of various Emacs functions to the unbound C-c
 combinations
 
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c d") 'delete-indentation)
 (global-set-key (kbd "C-c e") 'enlarge-window)
+(global-set-key (kbd "C-c h") 'hyperbole)
+(global-set-key (kbd "C-c r") 'replace-string)
 #+END_SRC
 
 ** Drag Stuff
@@ -324,6 +326,20 @@ preferences, then set it to the default style
                 (topmost-intro-cont first c-lineup-topmost-intro-cont c-lineup-gnu-DEFUN-intro-cont))))
 
 (setq c-default-style "my-style")
+#+END_SRC
+
+** GLSL Mode
+Add a mode for GLSL shader programs
+
+#+BEGIN_SRC emacs-lisp
+(use-package glsl-mode)
+#+END_SRC
+
+** Lua Mode
+Add and use a Lua mode for Emacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package lua-mode)
 #+END_SRC
 
 ** Elisp Mode
@@ -512,6 +528,27 @@ Ensure installation and enable
   :ensure t
   :config
   (amx-mode 1))
+#+END_SRC
+
+* LSP Mode
+Use Language Server Protocol to get additional insight into code
+written by myself and others
+
+#+BEGIN_SRC emacs-lisp
+(setq lsp-keymap-prefix "C-c s")
+(setq lsp-rust-server 'rust-analyzer)
+
+(use-package lsp-mode
+  :hook (
+         (rust-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+(use-package lsp-ui :commands lsp-ui-mode)
+
+(use-package which-key
+  :config
+  (which-key-mode))
 #+END_SRC
 
 * Projectile
