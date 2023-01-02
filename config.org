@@ -174,11 +174,13 @@ whether I want to stick to this; a simple color theme might be better)
 
 ** Mode Line
 *** Doom Mode Line
-Use an already configured mode line designed for the doom theme
+Use a pre-configured mode line designed for the doom theme
 
 #+BEGIN_SRC emacs-lisp
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :ensure t
+  ;; :init (doom-modeline-mode 1)
+  :hook (after-init . doom-modeline-mode))
 #+END_SRC
 
 *** Additional Info
@@ -207,8 +209,8 @@ layout by rebinding to C-u and M-u
 #+END_SRC
 
 ** Backspace
-Bind <DEL> to C-h to make editing much faster
-Use <F1> to access help instead
+Bind <DEL> to C-h to make editing much faster; use <F1> to access help
+instead
 
 #+BEGIN_SRC emacs-lisp
 (define-key key-translation-map (kbd "C-h") (kbd "<DEL>"))
@@ -231,7 +233,7 @@ but kills one word backwards otherwise
 #+END_SRC
 
 ** C-c <char> Bindings
-Set my custom bindings of various Emacs functions to the unbound C-c
+Set my own custom bindings of various Emacs functions to unbound C-c
 combinations
 
 #+BEGIN_SRC emacs-lisp
@@ -449,9 +451,8 @@ Add a mode for YAML configuration files, which are used by Jekyll
 
 * Completions
 ** Ido
-System for smart completion of file and buffer names
-Make sure full ido functionality is installed, configure it, and turn
-it on
+System for smart completion of file and buffer names: make sure full
+ido functionality is installed, configure it, and turn it on
 
 #+BEGIN_SRC emacs-lisp
 (use-package ido-completing-read+
@@ -465,8 +466,7 @@ it on
 #+END_SRC
 
 ** Amx
-Much improved interface for M-x
-Ensure installation and enable
+Much improved interface for M-x: Ensure installation and enable
 
 #+BEGIN_SRC emacs-lisp
 (use-package amx
@@ -482,8 +482,19 @@ Provides access to many in-buffer completions
 (use-package company
   :demand
   :bind (:map company-active-map
+         ("RET" . nil)
+         ("<return>" . nil)
+         ("<tab>" . company-complete-selection)
          ("TAB" . company-complete-selection)
-         ("RET" . nil))
+         ("C-n" . nil)
+         ("C-p" . nil)
+         ("M-n" . company-select-next)
+         ("M-p" . company-select-previous))
+  :bind (:map company-search-map
+         ("C-n" . nil)
+         ("C-p" . nil)
+         ("M-n" . company-select-next)
+         ("M-p" . company-select-previous))
   :init
   (setq company-idle-delay 0.3)
   (setq company-minimum-prefix-length 1)
@@ -597,23 +608,31 @@ separate markdown files.
 #+END_SRC
 
 * Dired
+** New Dired Buffers
+Kill the current buffer when selecting a new directory to display.
+
+#+BEGIN_SRC emacs-lisp
+(setq dired-kill-when-opening-new-dired-buffer t)
+#+END_SRC
+
 ** Dired-X
 Use the additional features provided in dired-x, including C-x C-j to
 jump back into dired
 
+(Since Emacs 28, these handy commands are in dired by default)
 #+BEGIN_SRC emacs-lisp
-(add-hook 'dired-load-hook
-               (lambda ()
-                 (load "dired-x")))
+;; (add-hook 'dired-load-hook
+;;                (lambda ()
+;;                  (load "dired-x")))
 
-(autoload 'dired-jump "dired-x"
-"Jump to Dired buffer corresponding to current buffer." t)
+;; (autoload 'dired-jump "dired-x"
+;; "Jump to Dired buffer corresponding to current buffer." t)
      
-(autoload 'dired-jump-other-window "dired-x"
-"Like \\[dired-jump] (dired-jump) but in other window." t)
+;; (autoload 'dired-jump-other-window "dired-x"
+;; "Like \\[dired-jump] (dired-jump) but in other window." t)
 
-(define-key global-map "\C-x\C-j" 'dired-jump)
-(define-key global-map "\C-x4\C-j" 'dired-jump-other-window)
+;; (define-key global-map "\C-x\C-j" 'dired-jump)
+;; (define-key global-map "\C-x4\C-j" 'dired-jump-other-window)
 #+END_SRC
 
 ** Kill Dired Buffers
@@ -645,6 +664,7 @@ install Magit Forge to integrate with GitHub and GitLab.
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
+  :demand t
   :bind (("C-x g" . magit-status)
          ("C-x M-g" . magit-dispatch)))
 
@@ -688,6 +708,7 @@ written by myself and others
 #+BEGIN_SRC emacs-lisp
 (setq lsp-keymap-prefix "C-c s")
 (setq lsp-rust-server 'rust-analyzer)
+(setq lsp-enable-snippet nil)
 
 (use-package lsp-mode
   :hook (
@@ -696,16 +717,12 @@ written by myself and others
   :commands lsp)
 
 (use-package lsp-ui :commands lsp-ui-mode)
-
-(use-package which-key
-  :config
-  (which-key-mode))
 #+END_SRC
 
 * Projectile
 Use projectile mode to keep track of projects and provide some useful
-functions for their management (I'm not sure whether I actually want
-to use this)
+functions for their management (Not sure whether I actually want to
+use this)
 
 #+BEGIN_SRC emacs-lisp
 ;; (use-package projectile
@@ -859,6 +876,17 @@ Full email client in emacs; must be installed on system level
 #+END_SRC
 
 * Miscellaneous
+** Which Key
+When a key sequence is in progress, after a short delay, display
+possible next keystrokes and the functions they invoke
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :config
+  (which-key-mode))
+#+END_SRC
+
+** Speed Type
 Allow me to run a typing test inside Emacs whenever I feel like it
 
 #+BEGIN_SRC emacs-lisp
