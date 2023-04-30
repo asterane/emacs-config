@@ -201,7 +201,7 @@ combinations
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c d") 'delete-indentation)
 (global-set-key (kbd "C-c e") 'enlarge-window)
-(global-set-key (kbd "C-c h") 'hyperbole)
+(global-set-key (kbd "C-c h") 'help)
 (global-set-key (kbd "C-c r") 'replace-string)
 #+END_SRC
 
@@ -463,7 +463,14 @@ Powerful information management system that connects documents
 together automatically using hypertext.
 
 #+BEGIN_SRC emacs-lisp
-(use-package hyperbole)
+;; (use-package hyperbole)
+#+END_SRC
+
+** Smartparens
+
+#+BEGIN_SRC emacs-lisp
+(use-package smartparens)
+(require 'smartparens-config)
 #+END_SRC
 
 * Org Mode
@@ -674,10 +681,11 @@ Full email client in emacs; must be installed on system level
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 
+(setq mail-user-agent 'mu4e-user-agent)
 (setq mu4e-maildir (expand-file-name "~/Maildir"))
 
 ; get mail
-(setq mu4e-get-mail-command "mbsync -c ~/.emacs.d/mu4e/.mbsyncrc -a"
+(setq mu4e-get-mail-command "offlineimap -o"
   ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
   mu4e-view-prefer-html t
   mu4e-update-interval 180
@@ -751,7 +759,7 @@ Full email client in emacs; must be installed on system level
 (setq message-kill-buffer-on-exit t)
 (setq mu4e-compose-dont-reply-to-self t)
 
-(require 'org-mu4e)
+;; (require 'org-mu4e)
 
 ;; convert org mode to HTML automatically
 (setq org-mu4e-convert-to-html t)
