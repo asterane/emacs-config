@@ -109,11 +109,12 @@ may be extended (stopped working)
 ;;   (dashboard-setup-startup-hook))
 #+END_SRC
 
-** All the Icons
-Make all-the-icons available for themes and other packages to use
+** Icons
+Make more icons available for themes and other packages to use
 
 #+BEGIN_SRC emacs-lisp
 (use-package all-the-icons)
+(use-package nerd-icons)
 #+END_SRC
 
 ** Doom Theme
@@ -458,14 +459,6 @@ Fast text search using the ripgrep utility
   :bind ("<f5>" . deadgrep))
 #+END_SRC
 
-** Hyperbole
-Powerful information management system that connects documents
-together automatically using hypertext.
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package hyperbole)
-#+END_SRC
-
 ** Smartparens
 
 #+BEGIN_SRC emacs-lisp
@@ -654,18 +647,6 @@ written by myself and others
 (use-package lsp-ui :commands lsp-ui-mode)
 #+END_SRC
 
-* Projectile
-Use projectile mode to keep track of projects and provide some useful
-functions for their management (Not sure whether I actually want to
-use this)
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package projectile
-  ;; :config
-  ;; (projectile-mode +1)
-  ;; (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-#+END_SRC
-
 * Email
 ** org-mime
 Allows emails with org components to be converted to html
@@ -827,4 +808,11 @@ Allow me to run a typing test inside Emacs whenever I feel like it
 
 #+BEGIN_SRC emacs-lisp
 (use-package speed-type)
+#+END_SRC
+
+** Ledger Mode
+Double entry accounting
+
+#+BEGIN_SRC emacs-lisp
+(use-package ledger-mode)
 #+END_SRC

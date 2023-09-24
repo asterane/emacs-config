@@ -5,7 +5,7 @@
 (tool-bar-mode -1)
 
 ;; get font size back to normal under dwm
-(set-face-attribute 'default nil :height 93)
+(set-face-attribute 'default nil :height 100)
 
 ;; enable Common Lisp features
 (require 'cl)
@@ -39,13 +39,6 @@
 
 (org-babel-load-file "~/.emacs.d/config.org")
 
-;; fix hyperbole messing with my favorite org mode keybinding
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-unset-key (kbd "M-<RET>"))
-            (local-unset-key (kbd "M-RET"))
-            (define-key org-mode-map (kbd "M-RET") 'org-meta-return)))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -55,7 +48,7 @@
  '(lsp-ui-doc-show-with-cursor t)
  '(org-agenda-files '("~/org/notes.org" "~/.notes"))
  '(package-selected-packages
-   '(sqlite3 markdown-mode magit-section lsp-ui lsp-mode eldoc org glsl-mode browse-kill-ring projectile forge speed-type ox-hugo deadgrep lua-mode company flycheck all-the-icons-dired doom-modeline doom-themes all-the-icons auto-package-update use-package unfill org-plus-contrib org-mime magit ido-completing-read+ amx)))
+   '(ledger-mode markdown-mode magit-section lsp-ui lsp-mode eldoc org glsl-mode browse-kill-ring projectile forge speed-type ox-hugo deadgrep lua-mode company flycheck all-the-icons-dired doom-modeline doom-themes all-the-icons auto-package-update use-package unfill org-plus-contrib org-mime magit ido-completing-read+ amx)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
