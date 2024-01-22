@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 ;; Emacs Initial Configuration
 ;; ===========================
 
@@ -48,10 +50,14 @@
  '(lsp-ui-doc-show-with-cursor t)
  '(org-agenda-files '("~/org/notes.org" "~/.notes"))
  '(package-selected-packages
-   '(ledger-mode markdown-mode magit-section lsp-ui lsp-mode eldoc org glsl-mode browse-kill-ring projectile forge speed-type ox-hugo deadgrep lua-mode company flycheck all-the-icons-dired doom-modeline doom-themes all-the-icons auto-package-update use-package unfill org-plus-contrib org-mime magit ido-completing-read+ amx)))
+   '(hl-todo ledger-mode markdown-mode magit-section lsp-ui lsp-mode eldoc org glsl-mode browse-kill-ring forge speed-type ox-hugo deadgrep lua-mode flycheck doom-modeline doom-themes auto-package-update use-package unfill org-plus-contrib org-mime magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :foreground "yellow" :weight semi-bold :slant normal :underline nil :height 4.0))) t)
+ '(bold ((t (:foreground "#D0D0D0" :weight bold))))
+ '(org-done ((t (:inherit org-headline-done :weight bold))))
+ '(org-table ((t (:foreground "gray"))))
+ '(org-todo ((t (:foreground "#79D836" :weight bold)))))
