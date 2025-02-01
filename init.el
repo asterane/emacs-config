@@ -3,21 +3,23 @@
 ;; Emacs Initial Configuration
 ;; ===========================
 
+;; relax garbage collection
+(setq gc-cons-threshold 51200000)
+
 ;; disable the toolbar
 (tool-bar-mode -1)
 
 ;; get font size back to normal under dwm
-(set-face-attribute 'default nil :height 100)
+(set-face-attribute 'default nil :height 120)
 
 ;; enable Common Lisp features
 (require 'cl)
 
-;; add MELPA package server
+;; add MELPA and nongnu package servers
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa" . "https://melpa.org/packages/")))
 
 (package-initialize)
 
@@ -34,10 +36,12 @@
 
 ;; load org and my full config file
 (use-package org
-  :pin    gnu
-  :ensure org-plus-contrib)
+  :pin    gnu)
 
 (require 'org)
+
+(setq native-comp-debug 1)
+(setq native-comp-speed 3)
 
 (org-babel-load-file "~/.emacs.d/config.org")
 
@@ -48,15 +52,26 @@
  ;; If there is more than one, they won't work right.
  '(flycheck-checker-error-threshold 500)
  '(lsp-ui-doc-show-with-cursor t)
- '(org-agenda-files '("~/org/notes.org" "~/.notes"))
+ '(max-lisp-eval-depth 800)
+ '(org-agenda-files '("/home/matthew/org/notes.org"))
  '(package-selected-packages
-   '(hl-todo ledger-mode markdown-mode magit-section lsp-ui lsp-mode eldoc org glsl-mode browse-kill-ring forge speed-type ox-hugo deadgrep lua-mode flycheck doom-modeline doom-themes auto-package-update use-package unfill org-plus-contrib org-mime magit)))
+   '(ace-window auto-package-update browse-kill-ring cape cargo
+                consult-flycheck consult-git-log-grep consult-notes
+                corfu dashboard deadgrep doom-modeline doom-themes
+                drag-stuff embark-consult flycheck-inline
+                flycheck-rust forge geiser-guile geiser-mit glsl-mode
+                hl-todo keychain-environment ledger-mode lsp-ui
+                lua-mode marginalia nerd-icons-completion
+                nerd-icons-corfu nerd-icons-dired nerd-icons-ibuffer
+                orderless org-journal org-mime org-roam ox-hugo
+                rust-mode smart-hungry-delete smartparens speed-type
+                sqlite3 sqlup-mode unfill vertico wgrep yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :foreground "yellow" :weight semi-bold :slant normal :underline nil :height 4.0))) t)
+ '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :foreground "yellow" :weight semi-bold :slant normal :underline nil :height 4.0))))
  '(bold ((t (:foreground "#D0D0D0" :weight bold))))
  '(org-done ((t (:inherit org-headline-done :weight bold))))
  '(org-table ((t (:foreground "gray"))))

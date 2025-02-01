@@ -1,0 +1,14 @@
+/.last-package-update-day
+/.lsp-session-v1
+/auto-save-list/
+/backup/
+/config.el
+/eln-cache/
+/elpa/
+/eshell/
+/*.sqlite
+/history
+/*.db
+/recentf
+/tramp
+/transient/

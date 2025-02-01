@@ -5,8 +5,8 @@
 ;; -*- lexical-binding: t; -*-
 #+END_SRC
 
-* User Information
-Set my name and email address
+* Self Information
+Set name and email address
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Matthew Rothlisberger")
@@ -82,7 +82,14 @@ cycling function to C-c t for when they do appear
 (global-set-key (kbd "C-c t") 'my-tab-width)
 #+END_SRC
 
-** Better Utilities 
+** Line Wrap
+Globally make lines that are too long wrap to the next visual line
+
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode t)
+#+END_SRC
+
+** Better Utilities
 Replace the automatically enabled buffer view and expansion system
 with better alternatives
 
@@ -133,7 +140,7 @@ killed text without excessive keystrokes
 * Appearance
 ** Dashboard
 Use a different startup screen that shows more useful information and
-may be extended (stopped working)
+may be extended
 
 #+BEGIN_SRC emacs-lisp
 (use-package dashboard
@@ -189,20 +196,17 @@ Use a pre-configured mode line designed for the doom theme
   :ensure t
   :custom
   (doom-modeline-height 24)
-  ;; :init (doom-modeline-mode 1)
   :hook (after-init . doom-modeline-mode))
 #+END_SRC
 
 *** Additional Info
-Show time and battery level in the mode line (or not)
+Show current time in the mode line
 
 #+BEGIN_SRC emacs-lisp
 (setq display-time-format nil)
 (setq display-time-day-and-date t)
 (setq display-time-24hr-format t)
 (display-time-mode 1)
-
-;(display-battery-mode 1)
 #+END_SRC
 
 * Keybindings
@@ -274,8 +278,8 @@ key presses
 (use-package smart-hungry-delete
   :ensure t
   :bind (("<DEL>" . smart-hungry-delete-backward-char)
-	 ("C-d" . smart-hungry-delete-forward-char))
-  :defer nil ;; dont defer so we can add our functions to hooks 
+         ("C-d" . smart-hungry-delete-forward-char))
+  :defer nil ;; don't defer so we can add our functions to hooks
   :config (smart-hungry-delete-add-default-hooks)
   )
 #+END_SRC
@@ -488,16 +492,21 @@ Add a mode for YAML configuration files, which are used by Jekyll
 Add a mode for Ada source files
 
 #+BEGIN_SRC emacs-lisp
-(use-package wisi)
-(use-package ada-mode)
+;; (use-package wisi)
+;; (use-package ada-mode)
+#+END_SRC
+
+** Scheme
+#+BEGIN_SRC emacs-lisp
+(use-package geiser)
+(use-package geiser-guile)
+(use-package geiser-mit :ensure t)
 #+END_SRC
 
 * Wayfinding
-Locate items and execute actions quickly
+Locate things and complete actions quickly
 
 ** Consult
-Improve the experience of searching for all kinds of things
-
 #+BEGIN_SRC emacs-lisp
 (use-package consult
   :ensure t
@@ -737,58 +746,6 @@ In-buffer completion package integrated with Emacs facilities
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 #+END_SRC
 
-** Ido
-System for smart completion of file and buffer names (deprecated)
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package ido-completing-read+
-;;   :ensure t
-;;   :config
-;;   (setq ido-enable-flex-matching t)
-;;   (setq ido-case-fold t)
-;;   (ido-mode 1)
-;;   (ido-everywhere 1)
-;;   (ido-ubiquitous-mode 1))
-#+END_SRC
-
-** Amx
-Much improved interface for M-x (deprecated)
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package amx
-;;   :ensure t
-;;   :config
-;;   (amx-mode 1))
-#+END_SRC
-
-** Company
-Provides access to many in-buffer completions (deprecated)
-
-#+BEGIN_SRC emacs-lisp
-;; (use-package company
-;;   :demand
-;;   :bind (:map company-active-map
-;;          ("RET" . nil)
-;;          ("<return>" . nil)
-;;          ("<tab>" . company-complete-selection)
-;;          ("TAB" . company-complete-selection)
-;;          ("C-n" . nil)
-;;          ("C-p" . nil)
-;;          ("M-n" . company-select-next)
-;;          ("M-p" . company-select-previous))
-;;   :bind (:map company-search-map
-;;          ("C-n" . nil)
-;;          ("C-p" . nil)
-;;          ("M-n" . company-select-next)
-;;          ("M-p" . company-select-previous))
-;;   :init
-;;   (setq company-idle-delay 0.3)
-;;   (setq company-minimum-prefix-length 1)
-;;   (setq company-selection-wrap-around t)
-;;   :config
-;;   (global-company-mode t))
-#+END_SRC
-
 * Navigation
 ** Ace Window
 Set up quicker window switching than normal, for when more than two
@@ -815,17 +772,13 @@ Fast text search using the ripgrep utility
 #+END_SRC
 
 ** Smartparens
-Potential for quick parenthesis navigation
-
 #+BEGIN_SRC emacs-lisp
 (use-package smartparens)
 (require 'smartparens-config)
 #+END_SRC
 
 * Org Mode
-** Consult Notes
-Add most Org notes to consult
-
+** Consult
 #+BEGIN_SRC emacs-lisp
 (use-package consult-notes
   :commands (consult-notes
@@ -929,6 +882,13 @@ supposed to
       org-src-tab-acts-natively t
       org-confirm-babel-evaluate nil
       org-edit-src-content-indentation 0)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (scheme . t)))
+
+(setq geiser-default-implementation 'guile)
 #+END_SRC
 
 ** Exports
@@ -1038,19 +998,20 @@ Ensure installation and enable
   (amx-mode 1))
 #+END_SRC
 
-** Consult Flycheck
+** Consult
 Add flycheck error navigation to consult
-
 #+BEGIN_SRC emacs-lisp
 (use-package consult-flycheck)
 #+END_SRC
 
 * LSP Mode
 Use Language Server Protocol to get additional insight into code
-written by myself and others
 
 #+BEGIN_SRC emacs-lisp
+(setq read-process-output-max (* 1024 1024))
+
 (setq lsp-keymap-prefix "C-c s")
+
 (setq lsp-rust-server 'rust-analyzer)
 
 (use-package lsp-mode
@@ -1067,6 +1028,8 @@ written by myself and others
     (setq-local completion-at-point-functions (list (cape-capf-buster #'lsp-completion-at-point))))
   :hook
   (rust-mode . lsp)
+  (c-mode . lsp)
+  (c++-mode . lsp)
   (lsp-mode . lsp-enable-which-key-integration)
   (lsp-completion-mode . my/lsp-mode-setup-completion)
   :commands lsp)
@@ -1074,149 +1037,40 @@ written by myself and others
 (use-package lsp-ui :commands lsp-ui-mode)
 #+END_SRC
 
-* Email
-** org-mime
-Allows emails with org components to be converted to html
+Use LSP Booster to speed up parsing and communication
+Below code from https://github.com/blahgeek/emacs-lsp-booster
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-mime)
-#+END_SRC
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+         (funcall bytecode))))
+   (apply old-fn args)))
+(advice-add (if (progn (require 'json)
+                       (fboundp 'json-parse-buffer))
+                'json-parse-buffer
+              'json-read)
+            :around
+            #'lsp-booster--advice-json-parse)
 
-** mu4e
-Full email client in emacs; must be installed on system level
-
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-(require 'mu4e)
-
-(setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-maildir (expand-file-name "~/Maildir"))
-
-; get mail
-(setq mu4e-get-mail-command "offlineimap -o"
-  ;; mu4e-html2text-command "w3m -T text/html" ;;using the default mu4e-shr2text
-  mu4e-view-prefer-html t
-  mu4e-update-interval 180
-  mu4e-headers-auto-update t
-  mu4e-compose-signature-auto-include nil
-  mu4e-compose-format-flowed t)
-
-;; to view selected message in the browser, no signin, just html mail
-(add-to-list 'mu4e-view-actions
-  '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-
-;; enable inline images
-(setq mu4e-view-show-images t)
-;; use imagemagick, if available
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
-
-;; every new email composition gets its own frame!
-;(setq mu4e-compose-in-new-frame t)
-
-;; don't save message to Sent Messages, IMAP takes care of this
-(setq mu4e-sent-messages-behavior 'delete)
-
-(add-hook 'mu4e-view-mode-hook #'visual-line-mode)
-
-;; <tab> to navigate to links, <RET> to open them in browser
-(add-hook 'mu4e-view-mode-hook
-  (lambda()
-;; try to emulate some of the eww key-bindings
-(local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
-(local-set-key (kbd "<tab>") 'shr-next-link)
-(local-set-key (kbd "<backtab>") 'shr-previous-link)))
-
-;; from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx
-(add-hook 'mu4e-headers-mode-hook
-      (defun my/mu4e-change-headers ()
-    (interactive)
-    (setq mu4e-headers-fields
-          `((:human-date . 25) ;; alternatively, use :date
-        (:flags . 6)
-        (:from . 22)
-        (:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
-        (:size . 7)))))
-
-;; if you use date instead of human-date in the above, use this setting
-;; give me ISO(ish) format date-time stamps in the header list
-(setq mu4e-headers-date-format "%Y-%m-%d %H:%M")
-
-;; spell check
-(add-hook 'mu4e-compose-mode-hook
-    (defun my-do-compose-stuff ()
-       "My settings for message composition."
-       (visual-line-mode)
-       (org-mu4e-compose-org-mode)
-           (use-hard-newlines -1)
-       (flyspell-mode)))
-
-(require 'smtpmail)
-
-;;rename files when moving
-;;NEEDED FOR MBSYNC
-(setq mu4e-change-filenames-when-moving t)
-
-;;set up queue for offline email
-;;use mu mkdir  ~/Maildir/acc/queue to set up first
-(setq smtpmail-queue-mail nil)  ;; start in normal mode
-
-;;from the info manual
-(setq mu4e-attachment-dir  "~/Downloads")
-
-(setq message-kill-buffer-on-exit t)
-(setq mu4e-compose-dont-reply-to-self t)
-
-;; (require 'org-mu4e)
-
-;; convert org mode to HTML automatically
-(setq org-mu4e-convert-to-html t)
-
-;;from vxlabs config
-;; show full addresses in view message (instead of just names)
-;; toggle per name with M-RET
-(setq mu4e-view-show-addresses 't)
-
-;; don't ask when quitting
-(setq mu4e-confirm-quit nil)
-
-;; mu4e-context
-(setq mu4e-context-policy 'pick-first)
-(setq mu4e-compose-context-policy 'always-ask)
-(setq mu4e-contexts
-  (list
-   (make-mu4e-context
-    :name "main" ;;for example-gmail
-    :enter-func (lambda () (mu4e-message "Entering context main"))
-    :leave-func (lambda () (mu4e-message "Leaving context main"))
-    :match-func (lambda (msg)
-          (when msg
-        (mu4e-message-contact-field-matches
-         msg '(:from :to :cc :bcc) "example@gmail.com")))
-    :vars '((user-mail-address . "example@gmail.com")
-        (user-full-name . "Matthew Rothlisberger")
-        (mu4e-sent-folder . "/example-gmail/[example].Sent Mail")
-        (mu4e-drafts-folder . "/example-gmail/[example].drafts")
-        (mu4e-trash-folder . "/example-gmail/[example].Trash")
-        (mu4e-compose-signature . (concat "Matthew Rothlisberger\n" "\n"))
-        (mu4e-compose-format-flowed . t)
-        (smtpmail-queue-dir . "~/Maildir/example-gmail/queue/cur")
-        (message-send-mail-function . smtpmail-send-it)
-        (smtpmail-smtp-user . "example")
-        (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-        (smtpmail-auth-credentials . (expand-file-name "~/.authinfo"))
-        (smtpmail-default-smtp-server . "smtp.gmail.com")
-        (smtpmail-smtp-server . "smtp.gmail.com")
-        (smtpmail-smtp-service . 587)
-        (smtpmail-debug-info . t)
-        (smtpmail-debug-verbose . t)
-        (mu4e-maildir-shortcuts . ( ("/example-gmail/INBOX"            . ?i)
-                    ("/example-gmail/[example].Sent Mail" . ?s)
-                    ("/example-gmail/[example].Trash"       . ?t)
-                    ("/example-gmail/[example].All Mail"  . ?a)
-                    ("/example-gmail/[example].Starred"   . ?r)
-                    ("/example-gmail/[example].drafts"    . ?d)
-                    ))))))
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)
+             (not (file-remote-p default-directory))
+             lsp-use-plists
+             (not (functionp 'json-rpc-connection))
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (when-let ((command-from-exec-path (executable-find (car orig-result))))
+            (setcar orig-result command-from-exec-path))
+          (message "Using emacs-lsp-booster for %s!" orig-result)
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 #+END_SRC
 
 * Miscellaneous
@@ -1244,4 +1098,24 @@ Double entry accounting
 
 #+BEGIN_SRC emacs-lisp
 (use-package ledger-mode)
+#+END_SRC
+
+** Shutdown
+Power-off the system
+
+#+BEGIN_SRC emacs-lisp
+(let ((now (decode-time)))
+  (run-at-time
+   (encode-time
+    `(50
+      59
+      21
+      ,(decoded-time-day now)
+      ,(decoded-time-month now)
+      ,(decoded-time-year now)
+      nil
+      -1
+      ,(decoded-time-zone now)))
+   nil
+   (lambda () (shell-command "if [ $(date +%H) -gt 20 ]; then systemctl poweroff; fi"))))
 #+END_SRC
