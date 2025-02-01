@@ -13,7 +13,8 @@
 (set-face-attribute 'default nil :height 100)
 
 ;; enable Common Lisp features
-(require 'cl)
+(require 'cl-lib)
+(require 'cl-extra)
 
 ;; add MELPA and nongnu package servers
 (require 'package)

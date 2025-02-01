@@ -1,11 +1,6 @@
 #+TITLE: Personal Emacs Configuration
 #+OPTIONS: toc:nil
 
-* Personal Emacs Configuration
-:PROPERTIES:
-:UNNUMBERED: notoc
-:END:
-
 # #+TOC: headlines
 
 * Overview
