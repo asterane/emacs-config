@@ -1,0 +1,36 @@
+#+TITLE: Personal Emacs Configuration
+#+OPTIONS: toc:nil
+
+* Personal Emacs Configuration
+:PROPERTIES:
+:UNNUMBERED: notoc
+:END:
+
+# #+TOC: headlines
+
+* Overview
+My Emacs configuration is reproduced in this repository. I use Emacs
+for all my text editing because it is the cleanest, most powerful tool
+available. I recommend it to all.
+
+The configuration I use comprises =early-init.el=, =init.el= and
+=config.org=. During startup, Emacs automatically loads
+=.emacs.d/early-init.el=, initializes graphics and some packages, then
+loads =.emacs.d/init.el=. All of the contained Emacs Lisp (elisp) code
+is run. Using exclusively '.el' files can lead to a messy
+configuration that is difficult to read. Comments help somewhat, but
+the file is still prone to excessive length.
+
+Org offers a great solution. Source code blocks (elisp in this case)
+may be placed in any org file. A function can then be run to "tangle"
+the file, converting it into a source file containing only the code
+blocks. Using Org allows me to fit all of my configuration changes
+into a foldable outline so that I can easily navigate to any part of
+the file, organize changes by type, and include clear explanations.
+
+My early init file sets variables required for good package
+startup. My main init file makes important initial configurations,
+then automatically loads all of the changes in the code blocks of my
+=config.org= file. All other configuration is there in the Org file,
+which i structured and has commentary throughout, preceding the code
+blocks. Feel free to use these as inspiration for your own config.
