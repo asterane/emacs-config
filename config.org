@@ -526,11 +526,17 @@ Add a mode for Ada source files
 ;; (use-package ada-mode)
 #+END_SRC
 
-** Scheme
+** Scheme Mode
 #+BEGIN_SRC emacs-lisp
 (use-package geiser)
 (use-package geiser-guile)
-(use-package geiser-mit :ensure t)
+(use-package geiser-mit)
+
+(add-hook 'scheme-mode-hook 'geiser-mode)
+(setq geiser-default-implementation 'guile)
+
+(define-key scheme-mode-map
+            (kbd "C-c l") 'geiser-load-current-buffer)
 #+END_SRC
 
 * Wayfinding
@@ -889,6 +895,12 @@ buffers
 (setq org-startup-indented t)
 #+END_SRC
 
+Improve LaTeX formatting
+
+#+BEGIN_SRC emacs-lisp
+(plist-put org-format-latex-options :scale 1.4)
+#+END_SRC
+
 ** Editing
 Try to catch attempted edits to folded subtrees
 
@@ -917,8 +929,37 @@ supposed to
  'org-babel-load-languages
  '((emacs-lisp . t)
    (scheme . t)))
+#+end_src
 
-(setq geiser-default-implementation 'guile)
+*** Scheme
+Improvements to Scheme behavior under Org Babel
+
+#+begin_src emacs-lisp
+(setq org-babel-default-header-args:scheme
+      (cons '(:session . ())
+            (assq-delete-all :session org-babel-default-header-args:scheme)))
+
+(defun org-babel-load-session:scheme (session body params)
+  "Load BODY into session corresponding to SESSION, or default."
+  (save-excursion
+    (let* ((source-buffer (current-buffer))
+	   (source-buffer-name (replace-regexp-in-string ;; zap surrounding *
+			        "^ ?\\*\\([^*]+\\)\\*" "\\1"
+			        (buffer-name source-buffer)))
+           (impl (or (when (cdr (assq :scheme params))
+		       (intern (cdr (assq :scheme params))))
+		     geiser-scheme-implementation
+		     geiser-default-implementation
+		     (car geiser-active-implementations)))
+           (full-body (org-babel-expand-body:scheme body params))
+           (session- (org-babel-scheme-make-session-name
+                      source-buffer-name session impl))
+           (repl-buffer (org-babel-scheme-get-repl impl session-)))
+      (with-current-buffer repl-buffer
+        (goto-char (process-mark (get-buffer-process (current-buffer))))
+        (insert (org-babel-chomp full-body))
+        (geiser-repl--send-input))
+      repl-buffer)))
 #+END_SRC
 
 ** Exports

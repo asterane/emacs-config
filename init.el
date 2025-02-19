@@ -52,6 +52,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(flycheck-checker-error-threshold 500)
+ '(ispell-complete-word-dict "/usr/share/dict/web2")
  '(lsp-ui-doc-show-with-cursor t)
  '(max-lisp-eval-depth 800)
  '(org-agenda-files '("/home/matthew/org/notes.org"))
