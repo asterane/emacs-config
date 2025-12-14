@@ -10,7 +10,7 @@
 (tool-bar-mode -1)
 
 ;; set general font size
-; (set-face-attribute 'defualt nil :height 100) ; for 1920 x 1080
+; (set-face-attribute 'default nil :height 100) ; for 1920 x 1080
 (set-face-attribute 'default nil :height 120) ; for 2560 x 1440
 
 ;; enable Common Lisp features
@@ -34,7 +34,7 @@
 (eval-when-compile
   (require 'use-package))
 
-; (use-package sqlite3)
+;; (use-package sqlite3)
 
 ;; load org and my full config file
 (use-package org
@@ -65,8 +65,8 @@
  ;; If there is more than one, they won't work right.
  '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :foreground "yellow" :weight semi-bold :slant normal :underline nil :height 4.0))))
  '(bold ((t (:foreground "#D0D0D0" :weight bold))))
- '(gnus-group-news-low ((t (:foreground "#767676"))))
- '(gnus-group-news-low-empty ((t (:weight normal))))
  '(org-done ((t (:inherit org-headline-done :weight bold))))
  '(org-table ((t (:foreground "gray"))))
- '(org-todo ((t (:foreground "#79D836" :weight bold)))))
+ '(org-todo ((t (:foreground "#79D836" :weight bold))))
+ '(gnus-group-news-low ((t (:weight bold))))
+ '(gnus-group-news-low-empty ((t (:weight normal)))))
