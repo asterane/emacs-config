@@ -118,6 +118,7 @@ Globally make lines that are too long wrap to the next visual line
 
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
+(global-visual-wrap-prefix-mode t)
 #+END_SRC
 
 ** Better Utilities
@@ -159,13 +160,19 @@ key combinations C-c left and C-c right.
 (winner-mode 1)
 #+END_SRC
 
-** Browse Kill Ring
+** Kill Ring
 Enable looking through the kill ring as necessary to get previously
 killed text without excessive keystrokes
 
 #+BEGIN_SRC emacs-lisp
 (use-package browse-kill-ring
   :bind ("C-c y" . browse-kill-ring))
+#+END_SRC
+
+Remove excessive indents
+
+#+BEGIN_SRC emacs-lisp
+(kill-ring-deindent-mode 1)
 #+END_SRC
 
 * Appearance
@@ -178,6 +185,7 @@ may be extended
   :ensure t
   :custom
   (dashboard-projects-backend 'project-el)
+  (dashboard-startup-banner '(1 2 3 4))
   (dashboard-center-content t)
   (dashboard-items '((recents . 5)
                      (projects . 5)
@@ -187,6 +195,8 @@ may be extended
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
   (dashboard-set-init-info t)
+  (dashboard-footer-messages '("Placeholder 0"
+                               "Placeholder 1"))
   :config
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
@@ -215,7 +225,6 @@ whether I want to stick to this; a simple color theme might be better)
 
   (doom-themes-org-config)
   (doom-themes-visual-bell-config))
-
 #+END_SRC
 
 ** Mode Line
@@ -286,6 +295,7 @@ combinations
 (global-set-key (kbd "C-c e") 'enlarge-window)
 (global-set-key (kbd "C-c h") 'help)
 (global-set-key (kbd "C-c r") 'replace-string)
+(global-set-key (kbd "C-c q") 'prog-fill-reindent-defun)
 #+END_SRC
 
 ** Drag Stuff
@@ -537,6 +547,17 @@ Add a mode for Ada source files
 
 (define-key scheme-mode-map
             (kbd "C-c l") 'geiser-load-current-buffer)
+#+END_SRC
+
+** KSP CFG Mode
+#+BEGIN_SRC emacs-lisp
+(use-package ksp-cfg-mode)
+#+END_SRC
+
+** Lisp Data Mode
+Temporary stand-in for Sail mode
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.sl\\'" . lisp-data-mode))
 #+END_SRC
 
 * Wayfinding
