@@ -6,7 +6,7 @@
 #+END_SRC
 
 * Self Information
-Set name and email address
+Set my name and email address
 
 #+BEGIN_SRC emacs-lisp
 (setq user-full-name "Matthew Rothlisberger")
@@ -221,10 +221,10 @@ whether I want to stick to this; a simple color theme might be better)
   (setq doom-acario-dark-brighter-comments nil)
   (setq doom-acario-dark-comment-bg t)
 
-  (load-theme 'doom-acario-dark t)
-
   (doom-themes-org-config)
   (doom-themes-visual-bell-config))
+
+(load-theme 'doom-acario-dark t)
 #+END_SRC
 
 ** Mode Line
@@ -324,71 +324,13 @@ key presses
   :config (smart-hungry-delete-add-default-hooks))
 #+END_SRC
 
-* Major Mode Changes
-** Grep Mode
-Add capability to edit grep buffers
+* Major Modes
+** Ada Mode
+Add a mode for Ada source files
 
 #+BEGIN_SRC emacs-lisp
-(use-package wgrep)
-#+END_SRC
-
-** Text Mode
-Automatically turn on spell check and auto fill in all text and org
-mode buffers
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-#+END_SRC
-
-** Programming Mode
-*** Todo Highlight
-Make TODO items stand out more
-
-#+BEGIN_SRC emacs-lisp
-(use-package hl-todo
-  :custom
-  (hl-todo-color-background nil)
-  (hl-todo-keyword-faces
-   '(("TODO" . "#FFA000")
-     ("NOTE" . "#70C0F0")))
-  :bind (:map hl-todo-mode-map
-              ("C-c t p" . hl-todo-previous)
-              ("C-c t n" . hl-todo-next)
-              ("C-c t o" . hl-todo-occur)
-              ("C-c t i" . hl-todo-insert))
-  :hook (prog-mode . hl-todo-mode))
-#+END_SRC
-
-*** Spell Check
-Use flyspell to check spelling in code comments
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-#+END_SRC
-
-*** Line Numbers
-Display line numbers in code buffers
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
-#+END_SRC
-
-*** White Space
-Show trailing (unnecessary) white space on all lines where it appears,
-but only in programming modes
-
-#+BEGIN_SRC emacs-lisp
-(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
-#+END_SRC
-
-** Rust Mode
-Add and use the official Rust mode for Emacs, and the Cargo minor mode
-
-#+BEGIN_SRC emacs-lisp
-(use-package rust-mode)
-(use-package cargo
-  :config (add-hook 'rust-mode-hook 'cargo-minor-mode))
+;; (use-package wisi)
+;; (use-package ada-mode)
 #+END_SRC
 
 ** C Mode
@@ -479,20 +421,6 @@ preferences, then set it to the default style
 (setq c-default-style "my-style")
 #+END_SRC
 
-** GLSL Mode
-Add a mode for GLSL shader programs
-
-#+BEGIN_SRC emacs-lisp
-(use-package glsl-mode)
-#+END_SRC
-
-** Lua Mode
-Add and use a Lua mode for Emacs
-
-#+BEGIN_SRC emacs-lisp
-(use-package lua-mode)
-#+END_SRC
-
 ** Elisp Mode
 Set eldoc mode, to automatically show brief documentation of elisp
 functions at point; also bind M-. in elisp mode to describe the
@@ -503,6 +431,117 @@ function at point
 
 (define-key emacs-lisp-mode-map
   (kbd "M-.") 'find-function-at-point)
+#+END_SRC
+
+** GLSL Mode
+Add a mode for GLSL shader programs
+
+#+BEGIN_SRC emacs-lisp
+(use-package glsl-mode)
+#+END_SRC
+
+** Grep Mode
+Add capability to edit grep buffers
+
+#+BEGIN_SRC emacs-lisp
+(use-package wgrep)
+#+END_SRC
+
+** KSP CFG Mode
+#+BEGIN_SRC emacs-lisp
+(use-package ksp-cfg-mode)
+#+END_SRC
+
+** Lilypond Mode
+#+BEGIN_SRC emacs-lisp
+(require 'lilypond-mode)
+(add-to-list 'auto-mode-alist '("\\.ly\\'" . LilyPond-mode))
+
+(defun my-lilypond-gen ()
+  "Run 'lilypond' over buffer's file in directory"
+  (interactive)
+  (shell-command (format "lilypond %s" (buffer-file-name))))
+
+(define-key LilyPond-mode-map
+            (kbd "C-c c") 'my-lilypond-gen)
+#+END_SRC
+
+TODO: keybinds to compile in directory, automatically show generated
+PDF with auto-revert-mode, play generated MIDI via Audacious
+
+** Lisp Data Mode
+Temporary stand-in for Sail mode
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.sl\\'" . lisp-data-mode))
+
+** Lua Mode
+Add and use a Lua mode for Emacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package lua-mode)
+#+END_SRC
+
+** Programming Mode
+*** Line Numbers
+Display line numbers in code buffers
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+END_SRC
+
+*** Spell Check
+Use flyspell to check spelling in code comments
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+#+END_SRC
+
+*** Todo Highlight
+Make TODO items stand out more
+
+#+BEGIN_SRC emacs-lisp
+(use-package hl-todo
+  :custom
+  (hl-todo-color-background nil)
+  (hl-todo-keyword-faces
+   '(("TODO" . "#FFA000")
+     ("NOTE" . "#70C0F0")))
+  :bind (:map hl-todo-mode-map
+              ("C-c t p" . hl-todo-previous)
+              ("C-c t n" . hl-todo-next)
+              ("C-c t o" . hl-todo-occur)
+              ("C-c t i" . hl-todo-insert))
+  :hook (prog-mode . hl-todo-mode))
+#+END_SRC
+
+*** White Space
+Show trailing (unnecessary) white space on all lines where it appears,
+but only in programming modes
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+#+END_SRC
+
+** Rust Mode
+Add and use the official Rust mode for Emacs, and the Cargo minor mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package rust-mode)
+(use-package cargo
+  :config (add-hook 'rust-mode-hook 'cargo-minor-mode))
+#+END_SRC
+
+** Scheme Mode
+#+BEGIN_SRC emacs-lisp
+(use-package geiser)
+(use-package geiser-guile)
+(use-package geiser-mit)
+
+(add-hook 'scheme-mode-hook 'geiser-mode)
+(setq geiser-default-implementation 'guile)
+
+(define-key scheme-mode-map
+            (kbd "C-c l") 'geiser-load-current-buffer)
 #+END_SRC
 
 ** SQL Mode
@@ -519,6 +558,15 @@ typing, and blacklist any necessary words
   (add-to-list 'sqlup-blacklist "schema"))
 #+END_SRC
 
+** Text Mode
+Automatically turn on spell check and auto fill in all text and org
+mode buffers
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+#+END_SRC
+
 ** YAML Mode
 Add a mode for YAML configuration files, which are used by Jekyll
 
@@ -528,36 +576,9 @@ Add a mode for YAML configuration files, which are used by Jekyll
   (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode)))
 #+END_SRC
 
-** Ada Mode
-Add a mode for Ada source files
-
+** Zig Mode
 #+BEGIN_SRC emacs-lisp
-;; (use-package wisi)
-;; (use-package ada-mode)
-#+END_SRC
-
-** Scheme Mode
-#+BEGIN_SRC emacs-lisp
-(use-package geiser)
-(use-package geiser-guile)
-(use-package geiser-mit)
-
-(add-hook 'scheme-mode-hook 'geiser-mode)
-(setq geiser-default-implementation 'guile)
-
-(define-key scheme-mode-map
-            (kbd "C-c l") 'geiser-load-current-buffer)
-#+END_SRC
-
-** KSP CFG Mode
-#+BEGIN_SRC emacs-lisp
-(use-package ksp-cfg-mode)
-#+END_SRC
-
-** Lisp Data Mode
-Temporary stand-in for Sail mode
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.sl\\'" . lisp-data-mode))
+(use-package zig-mode)
 #+END_SRC
 
 * Wayfinding
@@ -835,107 +856,6 @@ Fast text search using the ripgrep utility
 #+END_SRC
 
 * Org Mode
-** Consult
-#+BEGIN_SRC emacs-lisp
-(use-package consult-notes
-  :commands (consult-notes
-             consult-notes-search-in-all-notes
-             consult-notes-org-roam-find-node
-             consult-notes-org-roam-find-node-relation)
-  :bind
-  ("C-c n f" . consult-notes)
-  ("C-c n s" . consult-notes-search-in-all-notes)
-  :config
-  (setq consult-notes-file-dir-sources '(("Org"  ?o  "~/org/")))
-  ;; (setq consult-notes-org-headings-files '("~/org/learn.org"))
-  ;; (consult-notes-org-headings-mode)
-  (consult-notes-org-roam-mode))
-#+END_SRC
-
-** Org Roam
-Zettelkasten-style notes
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-roam
-  :bind
-  ("C-c c b" . org-roam-buffer-toggle)
-  ("C-c c c" . org-roam-capture)
-  ("C-c c f" . org-roam-node-find)
-  ("C-c c i" . org-roam-node-insert)
-
-  ("C-c w n" . org-roam-dailies-capture-today)
-  ("C-c w t" . org-roam-dailies-goto-today)
-  ("C-c w b" . org-roam-dailies-goto-previous-note)
-  ("C-c w f" . org-roam-dailies-goto-next-note)
-  :custom
-  (org-roam-directory "~/org/commonplace")
-  (org-roam-database-connector 'sqlite-builtin)
-
-  (org-roam-dailies-directory "waste/")
-  (org-roam-dailies-capture-templates
-   '(("d" "default" entry
-      "* %?"
-      :target (file+head "%<%Y-%m-%d>.org"
-                         "#+TITLE: %<%Y-%m-%d>\n"))))
-  )
-
-(org-roam-db-autosync-mode)
-#+END_SRC
-
-** Org Journal
-Extension specifically for journaling
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-journal
-  :bind
-  ("C-c j n" . org-journal-new-entry)
-  :custom
-  ;; (org-journal-date-prefix "#+title: ")
-  (org-journal-file-type 'weekly)
-  (org-journal-file-format "%YW%W.org")
-  (org-journal-dir "~/org/journal")
-  (org-journal-date-format "%A, %d %B %Y"))
-#+END_SRC
-
-** Global Keybindings
-Set recommended global keybindings for important org functions
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "C-c o l") 'org-store-link)
-(global-set-key (kbd "C-c o a") 'org-agenda)
-(global-set-key (kbd "C-c o c") 'org-capture)
-(global-set-key (kbd "C-c o b") 'org-switchb)
-#+END_SRC
-
-** Layout Settings
-Hide extraneous asterisks and enable pretty indentation for org
-buffers
-
-#+BEGIN_SRC emacs-lisp
-(setq org-hide-leading-stars t)
-(setq org-startup-indented t)
-#+END_SRC
-
-Improve LaTeX formatting
-
-#+BEGIN_SRC emacs-lisp
-(plist-put org-format-latex-options :scale 1.4)
-#+END_SRC
-
-** Editing
-Try to catch attempted edits to folded subtrees
-
-#+BEGIN_SRC emacs-lisp
-(setq org-catch-invisible-edits 'smart)
-#+END_SRC
-
-** Logging
-Log time of completion for finished to do items
-
-#+BEGIN_SRC emacs-lisp
-(setq org-log-done 'time)
-#+END_SRC
-
 ** Babel
 Make sure that source code blocks in org files behave as they are
 supposed to
@@ -983,6 +903,30 @@ Improvements to Scheme behavior under Org Babel
       repl-buffer)))
 #+END_SRC
 
+** Consult
+#+BEGIN_SRC emacs-lisp
+(use-package consult-notes
+  :commands (consult-notes
+             consult-notes-search-in-all-notes
+             consult-notes-org-roam-find-node
+             consult-notes-org-roam-find-node-relation)
+  :bind
+  ("C-c n f" . consult-notes)
+  ("C-c n s" . consult-notes-search-in-all-notes)
+  :config
+  (setq consult-notes-file-dir-sources '(("Org"  ?o  "~/org/")))
+  ;; (setq consult-notes-org-headings-files '("~/org/learn.org"))
+  ;; (consult-notes-org-headings-mode)
+  (consult-notes-org-roam-mode))
+#+END_SRC
+
+** Editing
+Try to catch attempted edits to folded subtrees
+
+#+BEGIN_SRC emacs-lisp
+(setq org-catch-invisible-edits 'smart)
+#+END_SRC
+
 ** Exports
 *** Markdown
 Require ox-md for Markdown exports from Org files.
@@ -1009,12 +953,91 @@ separate markdown files.
   :after ox)
 #+END_SRC
 
-* Dired
-** New Dired Buffers
-Kill the current buffer when selecting a new directory to display.
+** Global Keybindings
+Set recommended global keybindings for important org functions
 
 #+BEGIN_SRC emacs-lisp
-(setq dired-kill-when-opening-new-dired-buffer t)
+(global-set-key (kbd "C-c o l") 'org-store-link)
+(global-set-key (kbd "C-c o a") 'org-agenda)
+(global-set-key (kbd "C-c o c") 'org-capture)
+(global-set-key (kbd "C-c o b") 'org-switchb)
+#+END_SRC
+
+** Journal
+Extension specifically for journaling
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal
+  :bind
+  ("C-c j n" . org-journal-new-entry)
+  :custom
+  ;; (org-journal-date-prefix "#+title: ")
+  (org-journal-file-type 'weekly)
+  (org-journal-file-format "%YW%W.org")
+  (org-journal-dir "~/org/journal")
+  (org-journal-date-format "%A, %d %B %Y"))
+#+END_SRC
+
+** Layout Settings
+Hide extraneous asterisks and enable pretty indentation for org
+buffers
+
+#+BEGIN_SRC emacs-lisp
+(setq org-hide-leading-stars t)
+(setq org-startup-indented t)
+#+END_SRC
+
+Improve LaTeX formatting
+
+#+BEGIN_SRC emacs-lisp
+(plist-put org-format-latex-options :scale 1.4)
+#+END_SRC
+
+** Logging
+Log time of completion for finished to do items
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
+
+** Roam
+Zettelkasten-style notes
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam
+  :bind
+  ("C-c c b" . org-roam-buffer-toggle)
+  ("C-c c c" . org-roam-capture)
+  ("C-c c f" . org-roam-node-find)
+  ("C-c c i" . org-roam-node-insert)
+
+  ("C-c w n" . org-roam-dailies-capture-today)
+  ("C-c w t" . org-roam-dailies-goto-today)
+  ("C-c w b" . org-roam-dailies-goto-previous-note)
+  ("C-c w f" . org-roam-dailies-goto-next-note)
+  :custom
+  (org-roam-directory "~/org/commonplace")
+  (org-roam-database-connector 'sqlite-builtin)
+
+  (org-roam-dailies-directory "waste/")
+  (org-roam-dailies-capture-templates
+   '(("d" "default" entry
+      "* %?"
+      :target (file+head "%<%Y-%m-%d>.org"
+                         "#+TITLE: %<%Y-%m-%d>\n"))))
+  )
+
+(org-roam-db-autosync-mode)
+#+END_SRC
+
+* Dired
+** Icons Support
+Use icons for files in dired
+
+#+BEGIN_SRC emacs-lisp
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 #+END_SRC
 
 ** Kill Dired Buffers
@@ -1031,13 +1054,11 @@ accomplished in Ibuffer with * / D
   (buffer-list)))
 #+END_SRC
 
-** Icons Support
-Use icons for files in dired
+** New Dired Buffers
+Kill the current buffer when selecting a new directory to display.
 
 #+BEGIN_SRC emacs-lisp
-(use-package nerd-icons-dired
-  :hook
-  (dired-mode . nerd-icons-dired-mode))
+(setq dired-kill-when-opening-new-dired-buffer t)
 #+END_SRC
 
 * Magit
@@ -1123,6 +1144,8 @@ Use Language Server Protocol to get additional insight into code
   (rust-mode . lsp)
   (c-mode . lsp)
   (c++-mode . lsp)
+  (python-mode . lsp)
+  (zig-mode . lsp)
   (lsp-mode . lsp-enable-which-key-integration)
   (lsp-completion-mode . my/lsp-mode-setup-completion)
   :commands lsp)
@@ -1130,6 +1153,7 @@ Use Language Server Protocol to get additional insight into code
 (use-package lsp-ui :commands lsp-ui-mode)
 #+END_SRC
 
+** Booster
 Use LSP Booster to speed up parsing and communication
 Below code from https://github.com/blahgeek/emacs-lsp-booster
 
